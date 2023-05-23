@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: devops-exam-teamk1
+data:
+  DB_HOSTNAME: mariadb-service
+  DB_USERNAME: teamk1
+  DB_PASSWORD: teamk1
+  NOTIFY_URL: http://api-notify:3000
+  NOTIFY_TIMEOUT_SECONDS: '3'

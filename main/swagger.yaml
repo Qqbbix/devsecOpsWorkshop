@@ -1,0 +1,389 @@
+openapi: 3.0.0
+info:
+  description: >
+    Api สำหรับร้าน TeamK1
+
+  version: "0.0.1"
+  title: "Api"
+
+# schemes:
+#   - "http"
+#   - "https"
+servers:
+  - url: "http:/localhost:3000/api"
+    description: "Localhost"
+
+tags:
+  - name: "Reward"
+  - name: "Customer"
+  - name: "Login"
+
+# host: "localhost:8080"
+# basePath: "/api"
+paths:
+  /login/info/:
+    get:
+      tags:
+      - "Login"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json: 
+              schema:    
+                $ref: "#/components/schemas/Customer"   
+              example:
+                customerId: 1
+                customerName: Jonathan
+                point: 200
+  /login/renew/:
+    post:
+      tags:
+      - "Login"
+      responses:
+        "200":
+          description: "success"
+          content:
+            application/json:
+              example:
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        "401":
+          description: "unauthorized"
+  /login/logout/:
+    post:
+      tags:
+      - "Login"
+      responses:
+        "204":
+          description: ""
+      
+  /login/admin/:
+    post:
+      tags:
+      - "Login"
+      operationId: "adminLogin"
+      parameters:
+      - name: "userID"
+        in: "query"
+        description: "Admin user id"
+        required: true
+        schema:
+         type: "string"
+      - name: "password"
+        in: "query"
+        description: "admin user password"
+        required: true
+        schema:
+         type: "string"
+      responses:
+        "200":
+          description: "success"
+          content:
+            application/json:
+              example:
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        "401":
+          description: "unauthorized"
+  /login/customer/:
+    post:
+      tags:
+      - "Login"
+      summary: "Customer login"
+      operationId: "customerLogin"
+      # parameters:
+      # - name: "userID"
+      #   in: "query"
+      #   description: "Customer user id"
+      #   required: true
+      #   schema:
+      #     type: "string"
+      # - name: "password"
+      #   in: "query"
+      #   description: "Customer password"
+      #   required: true
+      #   schema:
+      #     type: "string"
+      requestBody:
+          content:
+            application/json: 
+              example:
+                userID: "001"
+                password: "<base64>"
+      responses:
+        "200":
+          description: "success"
+          content:
+            application/json:
+              example:
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        "401":
+          description: "unauthorized"
+  
+  /rewards/:
+      get:
+        tags:
+          - "Reward"
+        summary: "Gets all Reward."
+        responses:
+          '200':
+            description: "OK"  
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Reward'
+                example:
+                  - rewardId: 1
+                    rewardName: "CDG Cup"
+                    quantity: 10
+                    requirePoint: 50
+                    status: 0
+                    image: "<base64>"
+          '404':
+            description: "Not found"
+      post:
+            tags:
+              - "Reward"
+            summary: "Adds a new Reward"
+            requestBody:
+              content:
+                application/json:
+                  schema:    
+                    $ref: '#/components/schemas/Reward'   
+                  example:
+                    rewardName: "CDG Cup"
+                    quantity: 10
+                    requirePoint: 50
+            responses:
+              "201":
+                description: "OK"
+              "400":
+                description: "Bad Request"
+              "401":
+                description: "Unauthorize"
+  /rewards/{reward-id}/:
+      get:
+        tags:
+          - "Reward"
+        summary: "Gets Reward by ID."
+        parameters:
+          - name: "reward-id"
+            in: "path"
+            description: "Reward ID"
+            required: true
+            schema:
+              type: "integer"
+              format: "int64"
+        responses:
+          '200':
+            description: "OK"
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Reward'
+          '404':
+            description: "Not Found"
+      put:
+        tags:
+          - "Reward"
+        summary: "Update an Reward"
+        parameters:
+          - name: "reward-id"
+            in: "path"
+            description: "Reward ID"
+            required: true
+            schema:
+              type: "integer"
+              format: "int64"
+        requestBody:
+          content:
+            application/json: 
+              schema:    
+                $ref: '#/components/schemas/Reward'   
+              example:
+                rewardName: "Reward 1"
+                amount: 10
+                requirePoint: 50
+                active: true
+                image: "<base64>"
+        responses:
+          "204":
+            description: "OK"
+          "400":
+            description: "Bad Request"
+          "401":
+            description: "unauthorize"
+          "403":
+            description: "unauthorize"
+  /rewards/redeem/{reward-id}/:
+    put:
+        tags:
+          - "Reward"
+        summary: "Update an Reward and customer Point"
+        parameters:
+          - name: "reward-id"
+            in: "path"
+            description: "Reward ID"
+            required: true
+            schema:
+              type: "integer"
+              format: "int64"
+        requestBody:
+          content:
+            application/json: 
+              schema:    
+                $ref: "#/components/schemas/Redeem"   
+              example:
+                rewardId: 1
+                amount: 1
+                image: "<base64>"
+        responses:
+          "200":
+            description: "OK"
+            content:
+              application/json:
+                example:
+                  point: 20
+          "400":
+            description: "Bad Request"
+          "401":
+            description: "unauthorize"
+          "403":
+            description: "unauthorize"
+  
+  /customer/:
+    get: 
+      tags:
+        - "Customer"
+      summary: "Get current customer"
+      operationId: "getInfoAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json: 
+              schema:    
+                $ref: "#/components/schemas/Customer"   
+              example:
+                customerId: 1
+                customerName: Jonathan
+                point: 200
+        "404":
+          description: "not found"
+  /customers/{customer-id}/:
+    get:
+      tags:
+      - "Customer"
+      summary: "Get info customer by Id"
+      operationId: "getInfoById"
+      parameters:
+        - name: "customer-id"
+          in: "path"
+          description: "Reward ID"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json: 
+              schema:    
+                $ref: "#/components/schemas/Customer"   
+              example:
+                customerId: 1
+                customerName: Jonathan
+                point: 200
+        "404":
+          description: "not found"
+  /customers/{customer-id}/addPoint/:
+    put:
+      tags:
+      - "Customer"
+      summary: "Add a new points to user"
+      description: ""
+      operationId: "addPoint"
+      parameters:
+      - name: "customer-id"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        schema: 
+          type: "integer"
+          format: "int64"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+            example:
+                point: 20
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+              example:
+                point: 10
+        "400":
+          description: "invalid"
+        "401":
+          description: ""
+        "403":
+          description: ""
+
+components:
+  schemas:
+    Reward: 
+      type: "object"
+      properties:
+        rewardId:
+          type: "integer"
+          format: "int64"
+        rewardName:
+          type: "string"
+        quantity: 
+          type: "integer"
+          format: "int64"
+        requirePoint: 
+          type: "integer"
+          format: "int64"
+        active: 
+          type: "integer"
+          format: "int64"
+      example:
+        rewardId: 1
+        rewardName: CDG Umbella
+        quantity: 3
+        requirePoint: 500
+        active: 1
+    Customer:
+      type: "object"
+      properties: 
+        customerId:
+          type: "integer"
+          format: "int64"
+        point: 
+          type: "integer"
+          format: "int64"
+        updateDate: 
+          type: "integer"
+          format: "int64"
+    Redeem:
+      type: "object"
+      properties:
+        RewardId: 
+          type: "integer"
+          format: "int64"
+        customerId: 
+          type: "integer"
+          format: "int64"
+        amount: 
+          type: "integer"
+          format: "int64"
+        updateDate: 
+          type: "integer"
+          format: "int64"

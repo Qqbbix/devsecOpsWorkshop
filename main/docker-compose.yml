@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  gateway:
+    image: nexus.cw.cdg.co.th/devops-exam/teamK1/gateway:0.1.0
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - web
+      - api-login
+      - api-customer
+      - api-reward
+
+  web:
+    image: nexus.cw.cdg.co.th/devops-exam/teamK1/web:0.1.0
+    networks:
+      - app-network
+
+  api-login:
+    image: nexus.cw.cdg.co.th/devops-exam/teamK1/api-login:0.1.0
+    env_file:
+      - ./env/db.env
+      - ./env/jwt.env
+    networks:
+      - app-network
+
+  api-customer:
+    image: nexus.cw.cdg.co.th/devops-exam/teamK1/api-customer:0.1.0
+    env_file:
+      - ./env/db.env
+    networks:
+      - app-network
+
+  api-reward:
+    image: nexus.cw.cdg.co.th/devops-exam/teamK1/api-reward:0.1.0
+    env_file:
+      - ./env/db.env
+    networks:
+      - app-network
+
+networks:
+  app-network: {}

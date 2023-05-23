@@ -1,0 +1,98 @@
+version: '3.9'
+
+services:
+  gateway:
+    build:
+      context: ../Gateway/
+    ports:
+      - "8443:80"
+    networks:
+      - app-network
+    depends_on:
+      - web
+      - api-login
+      - api-customer
+      - api-reward
+
+  web:
+    image: registry.cw.cdg.co.th/devops-exam/teamk1/web:0.1.0
+    networks:
+      - app-network
+
+  api-login:
+    build: 
+      context: ../Api-Login/
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ../Api-Login/src/:/app/src/
+      - ../Api-Login/test/:/app/test/
+      - ../Api-Login/package.json/:/app/package.json
+      - ../Api-Login/package-lock.json/:/app/package-lock.json
+    env_file:
+      - ./env/db.env
+      - ./env/jwt.env
+      - ./env/notify.env
+    networks:
+      - app-network
+      - db-network
+
+  api-customer:
+    build: 
+      context: ../Api-Customer/
+      dockerfile: Dockerfile.dev
+    # image: registry.cw.cdg.co.th/devops-exam/teamk1/api-customer:0.1.0
+    volumes:
+      - ../Api-Customer/src/:/usr/src/app/src/
+      - ../Api-Customer/test/:/usr/src/app/test/
+      
+    env_file:
+      - ./env/db.env
+    networks:
+      - app-network
+      - db-network
+
+  api-reward:
+    image: registry.cw.cdg.co.th/devops-exam/teamk1/api-reward:0.1.0
+    env_file:
+      - ./env/db.env
+    networks:
+      - app-network
+      - db-network
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_USER=teamk1
+      - MARIADB_PASSWORD=teamk1
+      - MARIADB_DATABASE=K1
+    networks:
+      - db-network
+    volumes:
+      - ./db/:/docker-entrypoint-initdb.d/
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - 8080:8080
+    networks:
+      - db-network
+    depends_on:
+      - mariadb
+
+  api-notify:
+    image: registry.cw.cdg.co.th/first/api-devops-exam-notify:latest
+    environment:
+      - TEAM_NAME=K1
+      - LISTEN_PORT=3000
+    ports:
+    - 3000:3000
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  db-network: {}
+  app-network: {}

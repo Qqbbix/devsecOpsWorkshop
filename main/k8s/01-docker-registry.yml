@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5jdy5jZGcuY28udGgiOnsidXNlcm5hbWUiOiJyZWFkb25seSIsInBhc3N3b3JkIjoicmVhZG9ubHkiLCJhdXRoIjoiY21WaFpHOXViSGs2Y21WaFpHOXViSGs9In19fQ==
+metadata:
+  name: registry-cw-cdg-co-th
+  namespace: devops-exam-teamk1
+type: kubernetes.io/dockerconfigjson

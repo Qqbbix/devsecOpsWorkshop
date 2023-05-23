@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-service
+  namespace: devops-exam-teamk1
+  annotations:
+    konghq.com/override: preferred-kong-configuration
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mariadb
+  type: ClusterIP

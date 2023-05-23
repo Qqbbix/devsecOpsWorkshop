@@ -1,0 +1,12 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: preferred-kong-configuration
+  namespace: devops-exam-teamk1
+route:
+  strip_path: true
+  preserve_host: true
+  https_redirect_status_code: 308
+  protocols:
+  - https
+  - http

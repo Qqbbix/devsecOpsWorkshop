@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: devops-exam-teamk1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      imagePullSecrets:
+      - name: registry-cw-cdg-co-th
+      containers:
+      - name: web
+        image: registry.cw.cdg.co.th/devops-exam/teamk1/web:0.1.0
+        imagePullPolicy: Always
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 80

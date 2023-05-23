@@ -1,0 +1,6 @@
+.git/
+.*ignore
+.vscode/
+node_modules/
+Dockerfile*
+*.env

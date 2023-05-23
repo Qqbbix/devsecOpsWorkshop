@@ -1,0 +1,13 @@
+FROM node:16.16-alpine
+
+WORKDIR /app/
+
+ENV NODE_ENV = "development"
+
+COPY package* ./
+
+RUN npm install --verbose
+
+CMD [ "npm", "run", "start:dev" ]
+
+COPY . .

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-reward
+  namespace: devops-exam-teamk1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-reward
+  template:
+    metadata:
+      labels:
+        app: api-reward
+    spec:
+      imagePullSecrets:
+      - name: registry-cw-cdg-co-th
+      containers:
+      - name: api-reward
+        image: registry.cw.cdg.co.th/devops-exam/teamk1/api-reward:1.1.0
+        imagePullPolicy: Always
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: jwt-env

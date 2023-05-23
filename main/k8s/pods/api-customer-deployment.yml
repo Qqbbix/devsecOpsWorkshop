@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-customer
+  namespace: devops-exam-teamk1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-customer
+  template:
+    metadata:
+      labels:
+        app: api-customer
+    spec:
+      imagePullSecrets:
+      - name: registry-cw-cdg-co-th
+      containers:
+      - name: api-customer
+        image: registry.cw.cdg.co.th/devops-exam/teamk1/api-customer:1.1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: jwt-env

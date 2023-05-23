@@ -1,0 +1,16 @@
+FROM node:16.16-alpine
+
+WORKDIR /usr/src/app/
+
+ENV NODE_ENV="development" 
+ENV DB_USERNAME="root"
+ENV DB_PASSWORD="root"
+ENV DB_HOST="localhost"
+
+COPY package* ./
+
+RUN npm install 
+
+COPY . .
+
+RUN npm run coverage

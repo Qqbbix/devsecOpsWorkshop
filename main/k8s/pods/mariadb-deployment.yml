@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: devops-exam-teamk1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      imagePullSecrets:
+      - name: registry-cw-cdg-co-th
+      containers:
+      - name: mariadb
+        image: registry.cw.cdg.co.th/devops-exam/teamk1/teamk1-db:1.0.0
+        imagePullPolicy: Always
+        # resources:
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        ports:
+        - containerPort: 3306
+        # volumeMounts:
+        # - name: mysql-initdb
+        #   mountPath: /docker-entrypoint-initdb.d
+        # envFrom:
+        # - configMapRef:
+        #     name: database-config
+        # - secretRef:
+        #     name: database-secret
+      # volumes:
+      # - name: mysql-initdb
+      #   configMap:
+      #     name: mariadb-initdb-config
